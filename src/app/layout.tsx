@@ -3,6 +3,8 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import  Header from "../components/header";
 
+import { ClerkProvider } from '@clerk/nextjs'
+
 const inter = Inter({subsets: ["latin"]});
 
 export const metadata: Metadata = {
@@ -16,14 +18,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        {/* toster */}
-        <header>
-          <Header />
-        </header> 
-        {children}
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className="min-h-screen flex flex-col">
+          {/* toster */}
+          <header className=" sticky top-0 bg-white z-50">
+            <Header />
+          </header> 
+          <main className="bg-[#F4F2ED] flex-1 w-full">
+            {children}
+          </main>
+        </body>
+      </html>
+    </ClerkProvider>
+
   );
 }
