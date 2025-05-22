@@ -1,5 +1,5 @@
 import { Button } from "./ui/button";
-import { SignedIn, SignInButton, SignOutButton ,SignedOut } from "@clerk/nextjs";
+import { SignedIn, SignInButton, UserButton ,SignedOut } from "@clerk/nextjs";
 import { HomeIcon, SearchIcon,Briefcase, UsersIcon, MessagesSquare } from "lucide-react";
 import Image from "next/image";
 
@@ -44,17 +44,13 @@ function Header() {
             </a>
             
             <SignedIn >
-                  <Button>
-                    <SignInButton/>
-                  </Button>
+                  <UserButton/>
             </SignedIn>
 
-
-            {/* if not signed in  */}
             <SignedOut>
-              <Button asChild variant="outline">
-                <SignOutButton/>
-              </Button>
+                <Button asChild variant="secondary">
+                  <SignInButton/>
+                </Button>
             </SignedOut>
           </div>
     </div>
