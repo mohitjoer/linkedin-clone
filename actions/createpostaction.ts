@@ -17,4 +17,14 @@ export default async function createPostAction(formData:FormData) {
     if(!postInput){
         throw new Error ("post input is required");
     }
+
+    // define user
+
+    // uplode img 
+
+    //create post in database 
+    
+
+    //revaladiate path
+    
 }
