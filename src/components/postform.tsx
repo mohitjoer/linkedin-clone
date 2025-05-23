@@ -5,6 +5,7 @@ import { Avatar , AvatarImage , AvatarFallback } from "@radix-ui/react-avatar"
 import { Button } from "./ui/button";
 import { ImageIcon, XIcon } from "lucide-react";
 import { useState } from "react";
+import createPostAction from "../../actions/createpostaction";
 
 
 function Postform() {
@@ -12,6 +13,26 @@ function Postform() {
     const fileInputRef =useRef<HTMLInputElement>(null);
     const {user} = useUser();
     const [preview , setPreview] = useState <string | null> (null);
+
+    const handlePostAction = async (FormData :FormData )=>{
+        const formDataCopy = FormData ;
+        ref.current?.reset();
+
+        const text = formDataCopy.get("postInput") as string;
+
+        if (!text.trim()){
+            throw new Error("Post input is required");
+        }
+
+        setPreview(null);
+
+        try{
+            await createPostAction(formDataCopy);
+        }catch(error){
+            console.log("Error creating post ",error)
+        }
+    }
+
 
     const handleImageChange =(event: React.ChangeEvent<HTMLInputElement>)=>{
         const file =event.target.files?.[0];
@@ -25,8 +46,13 @@ function Postform() {
     const lastName = user?.lastName ;
     const imageUrl = user?.imageUrl ;
   return (
-    <div>
-        <form ref={ref} action="">
+    <div className="mb-2">
+        <form ref={ref} action={formData=>{
+            // handel submission 
+            handlePostAction(formData);
+
+            // toast notification 
+        }} className="p-3 bg-white border rounded-lg">
             <div className="flex items-center space-x-2">
                 <Avatar>
                     {user?.id ?(
