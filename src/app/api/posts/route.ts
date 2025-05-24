@@ -43,7 +43,7 @@ export async function GET(request:Request){
     try {
         await connectDB(); //connection to Database
 
-        const posts= await Post.getAllPosts();
+        const posts = await Post.getAllPosts();
 
         return NextResponse.json({posts});
 
