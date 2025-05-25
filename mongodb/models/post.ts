@@ -11,6 +11,7 @@ export interface IPostBase {
 }
 
 export interface IPost extends IPostBase, Document {
+  _id: Types.ObjectId | string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -24,12 +25,12 @@ interface IPostMethods {
   removePost(): Promise<void>;
 }
 
-// Define the static methods
+
 interface IPostStatics {
   getAllPosts(): Promise<IPostDocument[]>;
 }
 
-// Merge the document methods, and static methods with IPost
+
 export interface IPostDocument extends IPost, IPostMethods {}
 interface IPostModel extends IPostStatics, Model<IPostDocument> {}
 
@@ -95,7 +96,7 @@ PostSchema.statics.getAllPosts = async function () {
             options: { sort: { createdAt: -1 } },
         })
         .populate("likes")
-        .lean(); // lean() returns a plain JS object instead of a mongoose document
+        .lean(); 
 
     
         return posts.map((post : IPostDocument)=>({
