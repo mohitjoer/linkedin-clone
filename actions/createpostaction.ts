@@ -1,9 +1,13 @@
 "use server"
-
-import { currentUser ,auth} from "@clerk/nextjs/server"
+import connectDB from "../mongodb/db";
+import { currentUser } from "@clerk/nextjs/server"
 import {IUser} from ".././types/user"
 import { Post } from "../mongodb/models/post";
 import { AddPostRequestBody } from "@/app/api/posts/route";
+import cloudinary from "@/lib/cloudinary";
+import { Readable } from "stream";
+import { revalidatePath } from "next/cache";
+
 
 export default async function createPostAction(formData:FormData) {
     const user = await currentUser();
@@ -30,30 +34,44 @@ export default async function createPostAction(formData:FormData) {
     };
 
     // uplode img 
+
     try {
-        if( image.size > 0 ){
-             const body : AddPostRequestBody ={
-                user:userDB ,
-                text: postInput,
-                // imageUrl:image_Url,
-            }
-            await Post.create(body);
+        await connectDB();
 
-        }else{
-            const body : AddPostRequestBody ={
-                user:userDB ,
-                text: postInput,
-                
+        if (image && image.size > 0) {
+        const buffer = Buffer.from(await image.arrayBuffer());
+
+        // Upload to Cloudinary
+        imageUrl = await new Promise<string>((resolve, reject) => {
+            const stream = cloudinary.uploader.upload_stream(
+            { folder: "posts" },
+            (error, result) => {
+                if (error || !result) return reject(error);
+                resolve(result.secure_url);
             }
-            await Post.create(body);
+            );
+
+            // Convert buffer into readable stream
+            Readable.from(buffer).pipe(stream);
+        });
         }
-    } catch (error:any) {
-        throw new Error(`failed to create post ${error}`)    
-    }
 
-    //create post in database 
+        // Create post in MongoDB
+        const postData: AddPostRequestBody = {
+        user: userDB,
+        text: postInput,
+        imageUrl:imageUrl,
+        };
+
+        await Post.create(postData);
+    } catch (error: any) {
+        throw new Error(`Failed to create post: ${error.message}`);
+    }
+   
     
 
     //revaladiate path
+
+    revalidatePath("/");
     
 }

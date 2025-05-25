@@ -103,6 +103,7 @@ function Postform() {
                 )
             }
             </div>
+            
         </form>
 
         <hr className="mt-2 border-gray-300"/>
