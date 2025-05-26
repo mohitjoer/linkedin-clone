@@ -26,10 +26,16 @@ export type SerializedPost = {
   comments: {
     _id: string;
     text: string;
-    userId: string;
     createdAt: string;
     updatedAt: string;
+    user: {
+      userId: string;
+      firstName?: string;
+      lastName?: string;
+      userImage?: string;
+    };
   }[];
+  likes?: string[];
 };
 
 const PostComponent = ({ post }: { post: SerializedPost }) => {

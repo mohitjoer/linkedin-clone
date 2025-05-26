@@ -7,31 +7,9 @@ import { MessageCircle, Repeat2, Send, ThumbsUpIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LikePostRequestBody } from "@/app/api/posts/[post_id]/like/route";
 import { UnlikePostRequestBody } from "@/app/api/posts/[post_id]/unlike/route";
-import CommentForm from "./commentform";
-import CommentFeed from "./Commentfeed";
+import CommentFeed from "./commentfeed"; // Changed from "./Commentfeed"
+import { SerializedPost } from "./post"; // Import the type from post.tsx
 
-
-type SerializedPost = {
-    _id: string;
-    text?: string;
-    imageUrl?: string;
-    createdAt: string;
-    updatedAt: string;
-    user: {
-        userId: string;
-        firstName?: string;
-        lastName?: string;
-        userImage?: string;
-    };
-    comments: {
-        _id: string;
-        text: string;
-        userId: string;
-        createdAt: string;
-        updatedAt: string;
-    }[];
-    likes?: string[];
-};
 
 function PostOption({ post }: { post: SerializedPost }) {
     const [isCommentsOpen, setIsCommentsOpen] = useState(false);
@@ -123,7 +101,11 @@ function PostOption({ post }: { post: SerializedPost }) {
                     Like
                 </Button>
 
-                <Button variant="ghost" className="flex justify-center flex-1" >
+                <Button 
+                    variant="ghost" 
+                    className="flex justify-center flex-1"
+                    onClick={() => setIsCommentsOpen(!isCommentsOpen)}
+                >
                     <MessageCircle className={cn("mr-1", isCommentsOpen && "text-[#4881c2] fill-[#4881c2]")} />
                     comment
                 </Button>
@@ -142,10 +124,10 @@ function PostOption({ post }: { post: SerializedPost }) {
             {isCommentsOpen && (
                 <div className="p-4">
                     <SignedIn>
-                        <CommentForm postId={post._id} />
+                        {/* <CommentForm postId={post._id} /> */}
                     </SignedIn>
 
-                    {/* <CommentFeed post={post} /> */}
+                    <CommentFeed postId={post._id} />
                 </div>
             )}
         </div>

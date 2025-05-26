@@ -4,19 +4,48 @@ import { Post } from "../../../../../mongodb/models/post";
 import { currentUser } from "@clerk/nextjs/server";
 import { error } from "console";
 
-export async function GET(request:Request, {params}:{params:{post_id:string}}){
+export async function GET(
+    request: Request,
+    { params }: { params: { post_id: string } }
+) {
+    const { post_id } = await Promise.resolve(params);
     await connectDB();
 
     try {
-        const post =await Post.findById(params.post_id);
-        if (!post){
-            return NextResponse.json({error:"Post not found"},{status:404});
+        const post = await Post.findById(post_id)
+            .populate('user')
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'user',
+                    select: 'userId firstName lastName userImage'
+                }
+            });
+
+        if (!post) {
+            return NextResponse.json({ error: "Post not found" }, { status: 404 });
         }
-        return NextResponse.json(post);
+
+        const serializedPost = {
+            ...post.toObject(),
+            _id: post._id.toString(),
+            comments: post.comments?.map((comment: any) => ({
+                ...comment.toObject(),
+                _id: comment._id.toString(),
+                user: {
+                    userId: comment.user.userId,
+                    firstName: comment.user.firstName,
+                    lastName: comment.user.lastName,
+                    userImage: comment.user.userImage
+                }
+            }))
+        };
+
+        return NextResponse.json({ post: serializedPost });
     } catch (error) {
         return NextResponse.json(
-            {error:"An error occurred while fetchng the post"},
-            {status:500}
+            { error: "An error occurred while fetching the post" },
+            { status: 500 }
         );
     }
 } 
@@ -61,4 +90,4 @@ export async function DELETE(request:Request , {params}:{params:{post_id:string}
             }
         
         }
-} 
+}
