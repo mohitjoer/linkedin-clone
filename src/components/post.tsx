@@ -9,8 +9,9 @@ import ReactTimeago from "react-timeago";
 import { Button } from "./ui/button";
 import { Trash2 } from "lucide-react";
 import deletePostAction from "../../actions/deletePostAction";
+import PostOption from "./postoption";
 
-type SerializedPost = {
+export type SerializedPost = {
   _id: string;
   text?: string;
   imageUrl?: string;
@@ -23,18 +24,15 @@ type SerializedPost = {
     userImage?: string;
   };
   comments: {
-  _id: string;
-  text: string;
-  userId: string;
-  createdAt: string;
-  updatedAt: string;
-}[];
-
+    _id: string;
+    text: string;
+    userId: string;
+    createdAt: string;
+    updatedAt: string;
+  }[];
 };
 
-
 const PostComponent = ({ post }: { post: SerializedPost }) => {
-
   const { user } = useUser();
 
   const isAuthor = user?.id === post.user.userId;
@@ -47,7 +45,7 @@ const PostComponent = ({ post }: { post: SerializedPost }) => {
             <AvatarImage src={post.user.userImage} />
             <AvatarFallback>
               {post.user.firstName?.charAt(0)}
-              {post.user.firstName?.charAt(0)}
+              {post.user.lastName?.charAt(0)}
             </AvatarFallback>
           </Avatar>
         </div>
@@ -57,17 +55,16 @@ const PostComponent = ({ post }: { post: SerializedPost }) => {
             <div>
               {post.user.firstName} {post.user.lastName}
               {isAuthor && (
-                <Badge className="ml-2" variant="secondary">
-                  {" "}
-                  (You)
+                <Badge className="ml-2 " variant="secondary">
+                  Author
                 </Badge>
               )}
             </div>
             <p className="text-xs text-gray-400">
               @{post.user.firstName}
-              {post.user.firstName} - {post.user.userId.toString().slice(-4)}
+              {post.user.lastName} - {post.user.userId.toString().slice(-4)}
             </p>
-            <p>
+            <p className="text-xs text-gray-500">
               <ReactTimeago date={new Date(post.createdAt)} />
             </p>
           </div>
@@ -86,9 +83,8 @@ const PostComponent = ({ post }: { post: SerializedPost }) => {
       </div>
 
       <div>
-        <p className="px-4 pb-2 mt-2">{post.text}</p>
+        <p className="px-4 pb-2 mt-1">{post.text}</p>
 
-        {/* if image uploaded put it here... */}
         {post.imageUrl && (
           <Image
             src={post.imageUrl}
@@ -99,11 +95,10 @@ const PostComponent = ({ post }: { post: SerializedPost }) => {
           />
         )}
       </div>
-      {/* PostOptions */}
-
-     
+   
+      <PostOption post={post} />
     </div>
   );
 };
 
-export default PostComponent ;
+export default PostComponent;

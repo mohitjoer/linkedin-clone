@@ -3,20 +3,31 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   devIndicators: false,
   images: {
-    domains: ['res.cloudinary.com'],
-    remotePatterns:[
+    remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'links.papareact.com'
+        hostname: 'res.cloudinary.com',
+        port: '',
+        pathname: '/**',
       },
       {
         protocol: 'https',
-        hostname: 'img.clerk.com'
+        hostname: 'links.papareact.com',
+        port: '',
+        pathname: '/**',
       },
       {
         protocol: 'https',
-        hostname: 'linkedinclone.blob.core.windows.net'
-      },  
+        hostname: 'img.clerk.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'linkedinclone.blob.core.windows.net',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };

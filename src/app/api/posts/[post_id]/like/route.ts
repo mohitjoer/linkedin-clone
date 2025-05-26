@@ -4,12 +4,14 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   request: Request,
-  { params }: { params: { post_id: string } }
+  context: { params: { post_id: string } }
 ) {
+  const { post_id } = await Promise.resolve(context.params);
+
   await connectDB();
 
   try {
-    const post = await Post.findById(params.post_id);
+    const post = await Post.findById(post_id);
 
     if (!post) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
@@ -31,14 +33,16 @@ export interface LikePostRequestBody {
 
 export async function POST(
   request: Request,
-  { params }: { params: { post_id: string } }
+  context: { params: { post_id: string } }
 ) {
+  const { post_id } = await Promise.resolve(context.params);
+
   await connectDB();
 
   const { userId }: LikePostRequestBody = await request.json();
 
   try {
-    const post = await Post.findById(params.post_id);
+    const post = await Post.findById(post_id);
 
     if (!post) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });

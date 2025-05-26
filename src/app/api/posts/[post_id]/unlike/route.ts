@@ -1,6 +1,6 @@
+import { NextResponse } from "next/server";
 import connectDB from "../../../../../../mongodb/db";
 import { Post } from "../../../../../../mongodb/models/post";
-import { NextResponse } from "next/server";
 
 export interface UnlikePostRequestBody {
   userId: string;
@@ -8,13 +8,15 @@ export interface UnlikePostRequestBody {
 
 export async function POST(
   request: Request,
-  { params }: { params: { post_id: string } }
+  context: { params: { post_id: string } }
 ) {
+  const { post_id } = await Promise.resolve(context.params);
   await connectDB();
 
   const { userId }: UnlikePostRequestBody = await request.json();
+
   try {
-    const post = await Post.findById(params.post_id);
+    const post = await Post.findById(post_id);
 
     if (!post) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
