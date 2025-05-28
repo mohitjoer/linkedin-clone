@@ -7,8 +7,9 @@ import { MessageCircle, Repeat2, Send, ThumbsUpIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LikePostRequestBody } from "@/app/api/posts/[post_id]/like/route";
 import { UnlikePostRequestBody } from "@/app/api/posts/[post_id]/unlike/route";
-import CommentFeed from "./commentfeed"; // Changed from "./Commentfeed"
-import { SerializedPost } from "./post"; // Import the type from post.tsx
+import CommentFeed from "./commentfeed"; 
+import { SerializedPost } from "./post";
+import CommentForm from "./commentform";
 
 
 function PostOption({ post }: { post: SerializedPost }) {
@@ -124,7 +125,7 @@ function PostOption({ post }: { post: SerializedPost }) {
             {isCommentsOpen && (
                 <div className="p-4">
                     <SignedIn>
-                        {/* <CommentForm postId={post._id} /> */}
+                        <CommentForm postId={post._id} />
                     </SignedIn>
 
                     <CommentFeed postId={post._id} />
