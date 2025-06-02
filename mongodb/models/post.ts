@@ -87,37 +87,23 @@ PostSchema.methods.commentOnPost = async function (commentToAdd: ICommentBase) {
 };
 
 PostSchema.statics.getAllPosts = async function () {
-    try {
-        const posts = await this.find()
-            .sort({ createdAt: -1 })
-            .populate('user')
-            .populate({
-                path: 'comments',
-                populate: {
-                    path: 'user',
-                    select: 'userId firstName lastName userImage'
-                }
-            })
-            .lean();
+  try {
+    const posts = await this.find()
+      .sort({ createdAt: -1 })
+      .populate({
+        path: 'comments',
+        populate: {
+          path: 'user',
+          select: 'userId firstName lastName userImage'
+        }
+      })
+      .lean();
 
-        return posts.map((post: IPostDocument) => ({
-            ...post,
-            _id: post._id.toString(),
-            comments: post.comments?.map((comment: any) => ({
-                ...comment,
-                _id: comment._id.toString(),
-                user: {
-                    userId: comment.user.userId,
-                    firstName: comment.user.firstName,
-                    lastName: comment.user.lastName,
-                    userImage: comment.user.userImage
-                }
-            })) || []
-        }));
-    } catch (error) {
-        console.error("Error getting all posts:", error);
-        throw error;
-    }
+    return posts;
+  } catch (error) {
+    console.error("Error getting all posts:", error);
+    throw error;
+  }
 };
 
 PostSchema.methods.getAllComments = async function () {
