@@ -54,7 +54,7 @@ function CommentFeed({ postId }: CommentFormProps) {
         return (
           <div key={comment._id} className="flex space-x-2 mb-4">
             <Avatar>
-              <AvatarImage src={userData.userImage || ""} alt="User avatar" />
+              <AvatarImage className="h-8 w-8 rounded-full" src={userData.userImage || ""} alt="User avatar" />
               <AvatarFallback>
                 {(userData.firstName?.charAt(0) || "U") +
                   (userData.lastName?.charAt(0) || "")}

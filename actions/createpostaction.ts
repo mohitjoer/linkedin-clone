@@ -25,7 +25,6 @@ export default async function createPostAction(formData:FormData) {
         throw new Error ("post input is required");
     }
 
-    // define user
     const userDB :IUser ={
         userId:user.id,
         userImage:user.imageUrl,
@@ -33,15 +32,12 @@ export default async function createPostAction(formData:FormData) {
         lastName : user.lastName ||"",
     };
 
-    // uplode img 
-
     try {
         await connectDB();
 
         if (image && image.size > 0) {
         const buffer = Buffer.from(await image.arrayBuffer());
 
-        // Upload to Cloudinary
         imageUrl = await new Promise<string>((resolve, reject) => {
             const stream = cloudinary.uploader.upload_stream(
             { folder: "posts" },
@@ -51,12 +47,11 @@ export default async function createPostAction(formData:FormData) {
             }
             );
 
-            // Convert buffer into readable stream
             Readable.from(buffer).pipe(stream);
         });
         }
 
-        // Create post in MongoDB
+ 
         const postData: AddPostRequestBody = {
         user: userDB,
         text: postInput,
@@ -67,10 +62,7 @@ export default async function createPostAction(formData:FormData) {
     } catch (error: any) {
         throw new Error(`Failed to create post: ${error.message}`);
     }
-   
-    
 
-    //revaladiate path
 
     revalidatePath("/");
     

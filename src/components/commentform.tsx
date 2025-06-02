@@ -42,14 +42,14 @@ function CommentForm( { postId }: { postId: string }) {
         </AvatarFallback>
       </Avatar>
 
-      <div className="flex-1">
+      <div className="flex-1 inline-flex items-center space-x-2">
         <input
           type="text"
           name="comment"
           placeholder="Write a comment..."
           className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        <Button type="submit" hidden>
+        <Button type="submit" >
           comment
         </Button>
       </div>
