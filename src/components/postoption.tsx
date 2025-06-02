@@ -68,10 +68,10 @@ function PostOption({ post }: { post: SerializedPost }) {
 
             const newLikeData = await fetchLikeResponse.json();
             setLikes(newLikeData);
-        } catch (error: any) {
+        } catch (err: unknown) {
             setLiked(originalLiked);
             setLikes(originalLikes);
-            console.error("Error liking/unliking post:", error);
+            console.error("Error liking/unliking post:", err);
         }
     };
     return (

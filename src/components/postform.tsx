@@ -6,6 +6,7 @@ import { Button } from "./ui/button";
 import { ImageIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import createPostAction from "../../actions/createpostaction";
+import Image from 'next/image';
 
 
 function Postform() {
@@ -82,7 +83,13 @@ function Postform() {
             {
                 preview && (
                     <div className="mt-3">
-                        <img src={preview} alt="previw" className="w-full object-cover"/>
+                        <Image 
+                            src={preview} 
+                            alt="Preview" 
+                            width={200} 
+                            height={200} 
+                            className="mt-2 rounded-lg"
+                        />
                     </div>
                 )
             }

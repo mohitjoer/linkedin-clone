@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { IPostDocument } from "../../mongodb/models/post";
 import { useUser } from "@clerk/nextjs";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
@@ -77,9 +76,8 @@ const PostComponent = ({ post }: { post: SerializedPost }) => {
           {isAuthor && (
             <Button
               variant="outline"
-              onClick={() => {
-                // delete post
-                const promise = deletePostAction(post._id.toString());
+              onClick={async () => {
+                await deletePostAction(post._id.toString());
               }}
             >
               <Trash2 />

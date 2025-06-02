@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { IUser } from "../../../../types/user"
-import  connectDB  from "../../../../mongodb/db"; 
+import connectDB from "../../../../mongodb/db"; 
 import { currentUser } from "@clerk/nextjs/server";
 import { IPostBase ,Post  } from "../../../../mongodb/models/post";
 
@@ -39,20 +39,18 @@ export async function POST(request:Request){
     }
 } 
 
-export async function GET(request:Request){
-    try {
-        await connectDB(); //connection to Database
-
-        const posts = await Post.getAllPosts();
-
-        return NextResponse.json({posts});
-
-    } catch (error) {
-        return NextResponse.json(
-            {error:"An error Occurred while fetching posts"},
-            {status:500}
-        );
-    }
+export async function GET() {
+  try {
+    await connectDB();
+    const posts = await Post.getAllPosts();
+    return NextResponse.json({posts});
+  } catch (err) {
+    console.error("Error fetching posts:", err);
+    return NextResponse.json(
+      { error: "An error occurred while fetching posts" },
+      { status: 500 }
+    );
+  }
 }
 
 

@@ -1,17 +1,18 @@
+import { NextResponse } from "next/server";
+import { Post } from "../../../../../../mongodb/models/post";
+import connectDB from "../../../../../../mongodb/db";
 import { ICommentBase } from "../../../../../../mongodb/models/comment";
 import { IUser } from "../../../../../../types/user";
-import connectDB from "../../../../../../mongodb/db";
-import { Post } from "../../../../../../mongodb/models/post";
-import { NextResponse } from "next/server";
 
 export async function GET(
-  request: Request,
-  { params }: { params: { post_id: string } }
+  _request: Request,
+  context: { params: Promise<{ post_id: string }> }
 ) {
   try {
+    const { post_id } = await context.params;
     await connectDB();
 
-    const post = await Post.findById(params.post_id);
+    const post = await Post.findById(post_id);
 
     if (!post) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
@@ -19,9 +20,10 @@ export async function GET(
 
     const comments = await post.getAllComments();
     return NextResponse.json(comments);
-  } catch (error) {
+  } catch (err) {
+    console.error("Error handling comments:", err);
     return NextResponse.json(
-      { error: "An error occurred while fetching comments" },
+      { error: "An error occurred" },
       { status: 500 }
     );
   }
@@ -34,11 +36,15 @@ export interface AddCommentRequestBody {
 
 export async function POST(
   request: Request,
-  { params }: { params: { post_id: string } }
+  context: { params: Promise<{ post_id: string }> }
 ) {
-  const { user, text }: AddCommentRequestBody = await request.json();
   try {
-    const post = await Post.findById(params.post_id);
+    const { post_id } = await context.params;
+    await connectDB();
+    
+    const { user, text }: AddCommentRequestBody = await request.json();
+
+    const post = await Post.findById(post_id);
 
     if (!post) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
@@ -51,9 +57,10 @@ export async function POST(
 
     await post.commentOnPost(comment);
     return NextResponse.json({ message: "Comment added successfully" });
-  } catch (error) {
+  } catch (err) {
+    console.error("Error handling comments:", err);
     return NextResponse.json(
-      { error: "An error occurred while adding comment" },
+      { error: "An error occurred" },
       { status: 500 }
     );
   }

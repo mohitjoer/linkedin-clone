@@ -2,7 +2,7 @@ import { Button } from "./ui/button";
 import { SignedIn, SignInButton, UserButton ,SignedOut } from "@clerk/nextjs";
 import { HomeIcon, SearchIcon,Briefcase, UsersIcon, MessagesSquare } from "lucide-react";
 import Image from "next/image";
-
+import Link from 'next/link';
 
 function Header() {
   return (
@@ -26,22 +26,22 @@ function Header() {
 
 
           <div className="flex items-center space-x-4 px-6">
-            <a href="/" className="icon">
+            <Link href="/" className="icon">
                 <HomeIcon className="h-5"/>
                 <p>Home</p>
-            </a>
-            <a href="/" className="icon hidden md:flex">
+            </Link>
+            <Link href="/" className="icon hidden md:flex">
                 <UsersIcon className="h-5"/>
                 <p>Network</p>
-            </a>
-            <a href="/" className="icon hidden md:flex">
+            </Link>
+            <Link href="/" className="icon hidden md:flex">
                 <Briefcase className="h-5"/>
                 <p>Jobs</p>
-            </a>
-            <a href="/" className="icon hidden md:flex">
+            </Link>
+            <Link href="/" className="icon hidden md:flex">
                 <MessagesSquare className="h-5"/>
                 <p>Messaging</p>
-            </a>
+            </Link>
             
             <SignedIn >
                   <UserButton/>

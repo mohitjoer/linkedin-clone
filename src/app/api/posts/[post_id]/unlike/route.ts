@@ -8,25 +8,34 @@ export interface UnlikePostRequestBody {
 
 export async function POST(
   request: Request,
-  context: { params: { post_id: string } }
+  context: { params: Promise<{ post_id: string }> }
 ) {
-  const { post_id } = await Promise.resolve(context.params);
-  await connectDB();
-
-  const { userId }: UnlikePostRequestBody = await request.json();
-
   try {
-    const post = await Post.findById(post_id);
+    const { post_id } = await context.params;
+    await connectDB();
 
-    if (!post) {
-      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+    const { userId }: UnlikePostRequestBody = await request.json();
+
+    try {
+      const post = await Post.findById(post_id);
+
+      if (!post) {
+        return NextResponse.json({ error: "Post not found" }, { status: 404 });
+      }
+
+      await post.unlikePost(userId);
+      return NextResponse.json({ message: "Post unliked successfully" });
+    } catch (err) {
+      console.error("Error unliking post:", err);
+      return NextResponse.json(
+        { error: "An error occurred while unliking the post" },
+        { status: 500 }
+      );
     }
-
-    await post.unlikePost(userId);
-    return NextResponse.json({ message: "Post unliked successfully" });
-  } catch (error) {
+  } catch (err) {
+    console.error("Error in POST Unlike:", err);
     return NextResponse.json(
-      { error: "An error occurred while unliking the post" },
+      { error: "An error occurred while processing your request" },
       { status: 500 }
     );
   }
