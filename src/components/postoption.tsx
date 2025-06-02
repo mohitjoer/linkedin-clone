@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { SignedIn, useUser } from "@clerk/nextjs";
 import { Button } from "./ui/button";
-import { MessageCircle, Repeat2, Send, ThumbsUpIcon } from "lucide-react";
+import { MessageCircle, ThumbsUpIcon, RepeatIcon, Send as SendIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LikePostRequestBody } from "@/app/api/posts/[post_id]/like/route";
 import { UnlikePostRequestBody } from "@/app/api/posts/[post_id]/unlike/route";
@@ -111,25 +111,30 @@ function PostOption({ post }: { post: SerializedPost }) {
                     comment
                 </Button>
 
-                <Button variant="ghost" className="flex justify-center flex-1" >
-                    <Repeat2 className="mr-1" />
-                    repost
+                <Button 
+                    variant="ghost" 
+                    className="flex justify-center flex-1"
+                >
+                    <RepeatIcon className="mr-1" />
+                    Repost
                 </Button>
 
-                <Button variant="ghost" className="flex justify-center flex-1" >
-                    <Send className="mr-1" />
-                    send
+                <Button 
+                    variant="ghost" 
+                    className="flex justify-center flex-1"
+                >
+                    <SendIcon className="mr-1" />
+                    Send
                 </Button>
             </div>
 
             {isCommentsOpen && (
-                <div className="p-4">
+                <>
                     <SignedIn>
                         <CommentForm postId={post._id} />
                     </SignedIn>
-
-                    <CommentFeed postId={post._id} />
-                </div>
+                    <CommentFeed comments={post.comments} />
+                </>
             )}
         </div>
     )
